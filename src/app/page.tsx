@@ -1,3 +1,5 @@
+"use client";
+
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import BlogGrid from "@/components/BlogGrid";
@@ -24,17 +26,23 @@ export default function Home() {
     setSearchQuery(query);
   };
 
-  const filteredPosts = posts.filter((post) =>
-    post.title.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  const filteredPosts = posts.filter((post) => {
+    const queryParts = searchQuery.toLowerCase().split(" ");
+
+    return queryParts.every(
+      (part) =>
+        post.title.toLowerCase().includes(part) ||
+        post.tags?.some((tag) => tag.toLowerCase().includes(part))
+    );
+  });
 
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="flex justify-between items-center mb-8">
-        <h1 className="text-3xl font-bold">Blog Posts</h1>
+        <h1 className="text-3xl font-bold text-white">Blog Posts ⛩️</h1>
         <Link
-          href="/create"
-          className="bg-green-500 text-white px-4 py-2 rounded-lg"
+          href="/posts/create"
+          className="bg-green-500 text-white px-4 py-2 rounded-lg rounded-xl"
         >
           Create Post
         </Link>

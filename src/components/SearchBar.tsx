@@ -7,7 +7,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ onSearch }) => {
     <input
       type="text"
       placeholder="Search posts..."
-      className="w-full p-2 border rounded-lg"
+      className="w-full p-2 border rounded-xl"
       onChange={(e) => onSearch(e.target.value)}
     />
   );

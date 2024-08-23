@@ -1,0 +1,3 @@
+-- AlterTable
+ALTER TABLE "Post" ALTER COLUMN "content" SET DATA TYPE TEXT,
+ALTER COLUMN "thumbnail" SET DATA TYPE TEXT;

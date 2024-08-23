@@ -17,10 +17,11 @@ function validatePost(title: string, content: string) {
 
 export async function GET(
   req: Request,
-  { params }: { params: { id: number } }
+  { params }: { params: { id: string } } // Измените на string
 ) {
+  const postId = parseInt(params.id); // Преобразуем id в число
   const post = await prisma.post.findUnique({
-    where: { id: params.id },
+    where: { id: postId },
   });
 
   if (!post) {
@@ -30,62 +31,64 @@ export async function GET(
   return NextResponse.json({ message: "ok", status: 200, data: post });
 }
 
-export async function PUT(
-  req: Request,
-  { params }: { params: { id: number } }
-) {
-  try {
-    const formData = await req.formData();
-    const title = formData.get("title") as string;
-    const content = formData.get("content") as string;
-    const thumbnailFile = formData.get("thumbnail") as File | null;
+// export async function PUT(
+//   req: Request,
+//   { params }: { params: { id: string } } // Измените на string
+// ) {
+//   try {
+//     const formData = await req.formData();
+//     const title = formData.get("title") as string;
+//     const content = formData.get("content") as string;
+//     const thumbnailFile = formData.get("thumbnail") as File | null;
 
-    const errors = validatePost(title, content);
-    if (errors.length > 0) {
-      return NextResponse.json({
-        message: "Validation failed",
-        errors,
-        status: 400,
-      });
-    }
+//     const errors = validatePost(title, content);
+//     if (errors.length > 0) {
+//       return NextResponse.json({
+//         message: "Validation failed",
+//         errors,
+//         status: 400,
+//       });
+//     }
 
-    let thumbnailPath = undefined;
-    if (thumbnailFile) {
-      thumbnailPath = `/uploads/${Date.now()}-${thumbnailFile.name}`;
-      const buffer = Buffer.from(await thumbnailFile.arrayBuffer());
-      const fs = require("fs");
-      fs.writeFileSync(`./public${thumbnailPath}`, buffer);
-    }
+//     let thumbnailPath = undefined;
+//     if (thumbnailFile) {
+//       thumbnailPath = `/uploads/${Date.now()}-${thumbnailFile.name}`;
+//       const buffer = Buffer.from(await thumbnailFile.arrayBuffer());
+//       const fs = require("fs");
+//       fs.writeFileSync(`./public${thumbnailPath}`, buffer);
+//     }
 
-    const post = await prisma.post.update({
-      where: { id: params.id },
-      data: {
-        title,
-        content,
-        ...(thumbnailPath && { thumbnail: thumbnailPath }),
-      },
-    });
+//     const postId = parseInt(params.id); // Преобразуем id в число
+//     const post = await prisma.post.update({
+//       where: { id: postId },
+//       data: {
+//         title,
+//         content,
+//         ...(thumbnailPath && { thumbnail: thumbnailPath }),
+//       },
+//     });
 
-    if (!post) {
-      return NextResponse.json({ message: "Post not found", status: 404 });
-    }
+//     if (!post) {
+//       return NextResponse.json({ message: "Post not found", status: 404 });
+//     }
 
-    return NextResponse.json({ message: "ok", status: 200, data: post });
-  } catch (error) {
-    console.error("Error updating post:", error);
-    return NextResponse.json({
-      message: "Error while updating post",
-      status: 500,
-    });
-  }
-}
+//     return NextResponse.json({ message: "ok", status: 200, data: post });
+//   } catch (error) {
+//     console.error("Error updating post:", error);
+//     return NextResponse.json({
+//       message: "Error while updating post",
+//       status: 500,
+//     });
+//   }
+// }
 
 export async function DELETE(
   req: Request,
-  { params }: { params: { id: number } }
+  { params }: { params: { id: string } }
 ) {
+  const postId = parseInt(params.id);
   const post = await prisma.post.delete({
-    where: { id: params.id },
+    where: { id: postId },
   });
 
   if (!post) {
@@ -96,4 +99,32 @@ export async function DELETE(
   }
 
   return NextResponse.json({ message: "ok", status: 200 });
+}
+
+export async function PUT(
+  req: Request,
+  { params }: { params: { id: string } }
+) {
+  const postId = parseInt(params.id);
+
+  const body = await req.json();
+
+  console.log(body);
+
+  try {
+    const post = await prisma.post.update({
+      where: { id: postId },
+      data: {
+        ...body,
+      },
+    });
+
+    return Response.json({ message: "ok", status: 200, data: post });
+  } catch (error) {
+    console.error("Error updating post:", error);
+    return Response.json({
+      message: "Error while updating post",
+      status: 500,
+    });
+  }
 }

@@ -3,10 +3,10 @@ import { NextResponse } from "next/server";
 
 export async function POST(
   req: Request,
-  { params }: { params: { id: number } }
+  { params }: { params: { id: string } }
 ) {
   const post = await prisma.post.update({
-    where: { id: params.id },
+    where: { id: parseInt(params.id) },
     data: { likes: { increment: 1 } },
   });
 
