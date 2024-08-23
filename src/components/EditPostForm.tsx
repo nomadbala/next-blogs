@@ -24,7 +24,7 @@ const EditPostForm: React.FC<EditPostFormProps> = ({ postId }) => {
       if (data.status === 200) {
         setTitle(data.data.title);
         setContent(data.data.content);
-        setCurrentThumbnail(data.data.thumbnail);
+        setCurrentThumbnail(data.data.thumbnail || ""); // Handle null thumbnail
         setTags(data.data.tags);
       }
     };
@@ -118,11 +118,17 @@ const EditPostForm: React.FC<EditPostFormProps> = ({ postId }) => {
       />
       <div>
         <p className="text-white">Current thumbnail:</p>
-        <img
-          src={currentThumbnail}
-          alt="Current thumbnail"
-          className="w-32 h-32 object-cover"
-        />
+        {currentThumbnail ? (
+          <img
+            src={currentThumbnail}
+            alt="Current thumbnail"
+            className="w-32 h-32 object-cover"
+          />
+        ) : (
+          <div className="bg-gray-200 flex items-center justify-center w-32 h-32 rounded-t-lg">
+            <span className="text-gray-500">No Image Available</span>
+          </div>
+        )}
       </div>
       <input
         type="file"

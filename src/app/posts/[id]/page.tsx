@@ -12,33 +12,48 @@ export default function PostPage() {
   const router = useRouter();
   const { id } = useParams();
   const [post, setPost] = useState<Post | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     if (id) {
       const fetchPost = async () => {
-        const response = await fetch(`/api/posts/${id}`);
-        const data = await response.json();
-        console.log(`Fetched post data: ${JSON.stringify(data)}`);
-        setPost(data.data);
+        try {
+          const response = await fetch(`/api/posts/${id}`);
+          if (!response.ok) throw new Error("Failed to fetch post");
+          const data = await response.json();
+          setPost(data.data);
+        } catch (err) {
+          setError("Failed to load post");
+          console.error(err);
+        }
       };
       fetchPost();
     }
   }, [id]);
 
   const handleLike = async () => {
-    const response = await fetch(`/api/posts/${id}/like`, { method: "POST" });
-    if (response.ok) {
+    try {
+      const response = await fetch(`/api/posts/${id}/like`, { method: "POST" });
+      if (!response.ok) throw new Error("Failed to like post");
       setPost((prev) => (prev ? { ...prev, likes: prev.likes + 1 } : null));
+    } catch (err) {
+      setError("Failed to like post");
+      console.error(err);
     }
   };
 
   const handleDelete = async () => {
-    const response = await fetch(`/api/posts/${id}`, { method: "DELETE" });
-    if (response.ok) {
+    try {
+      const response = await fetch(`/api/posts/${id}`, { method: "DELETE" });
+      if (!response.ok) throw new Error("Failed to delete post");
       router.push("/");
+    } catch (err) {
+      setError("Failed to delete post");
+      console.error(err);
     }
   };
 
+  if (error) return <div className="text-red-500">{error}</div>;
   if (!post) return <div className="text-white">Loading...</div>;
 
   return (
@@ -66,13 +81,19 @@ export default function PostPage() {
       <div className="mt-20">
         <div className="bg-white rounded-lg shadow-lg overflow-hidden rounded-xl">
           <div className="relative h-96">
-            <Image
-              src={post.thumbnail as string}
-              alt={post.title}
-              layout="fill"
-              objectFit="cover"
-              className="rounded-t-lg"
-            />
+            {post.thumbnail ? (
+              <Image
+                src={post.thumbnail as string}
+                alt={post.title}
+                layout="fill"
+                objectFit="cover"
+                className="rounded-t-lg"
+              />
+            ) : (
+              <div className="bg-gray-200 flex items-center justify-center w-full h-full rounded-t-lg">
+                <span className="text-gray-500">No Image Available</span>
+              </div>
+            )}
           </div>
           <div className="p-8">
             <h1 className="text-4xl font-bold mb-4">{post.title}</h1>
