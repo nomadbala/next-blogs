@@ -1,0 +1,27 @@
+
+9
+	README.md,8\e\8ec9a00bfd09b3190ac6b22251dbb1aa95a0579d
+@
+src/app/page.tsx,3\3\3393394e21dbac7686e91ad17c5283fb052d67f3
+B
+src/app/layout.tsx,c\f\cfb47de6ae0cae626eed46461300112ef521d977
+C
+src/app/globals.css,d\a\da1d6f21d01d0f36b5501dffcf7fd160ffcb290d
+D
+prisma/schema.prisma,1\8\187e4a6f168cf143dde68ce28a29ae08ce9b9578
+4
+.env,3\c\3c84dcdc6bbe3d7817c49dcdc327b926fea1808a
+8
+Makefile,8\3\836efb6e25a091dcb4ff8e1dbb2f0be6a5cbf14c
+@
+src/lib/utils.ts,b\6\b64d1893e69ac0511cda386a979ec589465b7fe7
+B
+tailwind.config.ts,5\2\52c961376029165b06e7861b1dc68c3b2455eeff
+p
+@prisma/migrations/20240823083559_initial_migration/migration.sql,8\d\8d6623c1aeb0641b0937cb0c0975523c007afefb
+A
+src/lib/prisma.ts,c\d\cd21019e0b0022c129983862d28ff953b89d788a
+J
+src/app/api/posts/route.ts,1\b\1b55488c493eb36ceffbc04d2e95a9390d5f5d54
+K
+src/components/BlogCard.tsx,8\9\89152ad113bdd6236717d0723c1ba4ccc7731ba4
