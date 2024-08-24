@@ -14,6 +14,27 @@ pnpm dev
 bun dev
 ```
 
+If you wanna run project on your pc, add this .env variables
+
+DATABASE_URL:
+
+And change schema.prisma
+datasource db {
+  provider = "postgresql"
+  url = env("POSTGRES_PRISMA_URL")
+  directUrl = env("POSTGRES_URL_NON_POOLING")
+}
+
+To
+datasource db {
+  provider = "postgresql"
+  url = env("DATABASE_URL")
+}
+
+Start postgresql datbase in docker:
+docker run --name blog_db -p 5444:5432 -e POSTGRES_USER=blog_user -e POSTGRES_PASSWORD=blog_password -e POSTGRES_DB=blog_db postgres:latest
+
+Or use makefile to do this command.
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
 You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
